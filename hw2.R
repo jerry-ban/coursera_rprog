@@ -29,6 +29,17 @@ for (letter in x){
 #   next : skip the  iteration of a loop
 #   return: exit a function
 
+set.seed(1)
+normals<-rnorm(100,1,2)
+normals
+summary(normals)
+sd(normals)
+
+x<-seq(1.7,1.9, len=11)
+y<- sapply(x, function(y){y*y})
+y
+plot(x, exp(-(y-min(y))),type = "l")
+
 z<-5
 while(z>=3 && z<=10){
   coin<- rbinom(1,1,0.5)
