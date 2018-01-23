@@ -1,0 +1,1 @@
+str() # structure diagnoistic function and alternative to summary
