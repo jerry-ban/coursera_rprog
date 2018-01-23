@@ -1,7 +1,7 @@
 lapply: loop over a list and evaluate a function on each element of the list
 sapply: same as lapply but try to simplity the result
 apply: apply a function over the margins of an array
-tapply: apply a function over subsets of a vector (table apply)
+tapply: apply a function over subsets of a vector (table apply), also see: vapply
 mapply: multivariate version of lapply
 
 An auxiliary function: split is also useful, particularly in conjunction with lapply//sapply
@@ -61,4 +61,60 @@ apply(x,1,quantile, probs = c(0.25,0.75)) # rpobs is the ... parameters for quan
 a<-array(rnorm(2*2*10), c(2,2,10))
 apply(a,c(1,2),mean) # keep the 1st, 2nd dimension, collapse the 3rd
 
+#mapply
+str(mapply)
+# FUN is a function to apply
+... containts arguments to apply over
+mapply can take multiple list arguments and then apply a function to the elements of those, of the multiple lists, in parallel. 
 
+list(rep(1,4), rep(2,3), rep(3,2), rep(4,1))
+mapply(rep, 1:4, 4:1)
+
+#vectorizing a function
+noise<-function(n, mean, sd){
+    rnorm(n, mean, sd)
+}
+
+mapply(noise, 1:5, 1:5, 2)
+}
+list(noise(1,1,2), noise(2,2,2),noise(3,3,2),noise(4,4,2),noise(5,5,2))
+
+#tapply  is used to apply a function over subsets of a vector.
+str(tapply)
+# x is a vector, index is a factor or a list of factors
+
+x<-c(rnorm(10), runif(10), rnorm(10,1))
+f<-gl(3,10)
+# Generate factors by specifying the pattern of their levels
+tapply(x,f,mean)
+tapply(x,f,mean, simplify=FALSE)
+tapply(x,f,range)
+
+
+#split, like tapply, but only split to groups, not apply functions
+split(x,f)
+
+lapply(split(s,f), mean)
+
+library(datasets)
+head(airquality)
+s<-split(airquality, airquality$Month)
+lapply(s,function(x) colMeans(x[,c("Ozone","Solar.R","Wind")]))
+sapply(s,function(x) colMeans(x[,c("Ozone","Solar.R","Wind")]))
+sapply(s,function(x) colMeans(x[,c("Ozone","Solar.R","Wind")], na.rm=TRUE))
+
+#split on more than one variable
+x<-norm(10)
+f1<- gl(2,5)
+f2<-gl(5,2)
+interaction(f1,f2)
+split(x,list(f1,f2))
+split(x,list(f1,f2), drop=TRUE) # usefull here two levels, but useless for multiple level factors, it will drop empty levels
+str(split(x,list(f1,f2), drop=TRUE))
+
+flags <- data.frame().....
+cls_list <- lapply(flags, class)
+
+unique(c(3,4,5,5,5,6,6))
+
+asXDV7PK9aTCd2C1
