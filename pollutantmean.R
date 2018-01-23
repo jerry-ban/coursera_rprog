@@ -7,7 +7,8 @@ pollutantmean<-function(directory, pollutant, id=NULL){
     file_full_names <- c()
     if(is.null(id)){
         file_full_names <-list.files(directory, full.names = TRUE)
-    } else{
+    } 
+    else{
         counter <-0
         for(i in id){
             counter<-counter+1

@@ -1,0 +1,18 @@
+lapply: loop over a list and evaluate a function on each element of the list
+sapply: same as lapply but try to simplity the result
+apply: apply a function over the margins of an array
+tapply: apply a function over subsets of a vector (table apply)
+mapply: multivariate version of lapply
+
+An auxiliary function: split is also useful, particularly in conjunction with lapply//sapply
+
+lapply( x, FUN, ...)
+
+is.vector
+is.null
+is.integer
+...
+
+x is a list,
+FUN is a function,
+... is ... parameters
