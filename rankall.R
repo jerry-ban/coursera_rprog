@@ -1,7 +1,16 @@
+
 library(dplyr)
-best <- function(state, outcome) {
+#source("rankhospital.R")
+rankall <- function(outcome, num = "best") {
+    ## Read outcome data
+    ## Check that state and outcome are valid
+    ## Return hospital name in that state with the given rank
+    ## 30-day death rate
+    #rankhospital("MD", "heart attack", "worst")
     #state<- "TX"
-    #outcome <- "heart. attack"
+    #outcome <- "heart failure"
+    #num <- 4
+    
     rdata<-read.csv("Assignment3-data/outcome-of-care-measures.csv", stringsAsFactors = FALSE)
     
     
@@ -37,18 +46,23 @@ best <- function(state, outcome) {
     col_id
     hospital_name_id <-grep("Hospital.Name", colnames(rdata))
     #str(hospital_name_id)
-    sdata <- rdata[which(rdata$State==state & rdata$State == state),  ]
+    state_col_id <-grep("State", colnames(rdata))
+    sdata <- rdata # rdata[which(rdata$State==state & rdata$State == state),  ]
     sdata[,col_id] <- suppressWarnings(as.numeric(as.character(sdata[,col_id])))
     summary(sdata)
     
-    final_data <- sdata[,c(hospital_name_id,col_id)]
+    final_data <- sdata[,c(hospital_name_id,col_id,state_col_id)]
     summary(final_data)
     
     result <- final_data[order(final_data[,2], final_data[,1]), ]
     #rdata[,"Hospital.Name"] <- as.character(rdata[,"Hospital.Name"])
-    head(result)
+    #head(result)
+    #tail(result)
     
-    result[1,1]    
+    #result_cleaned <- result[complete.cases(result),]
+    result_cleaned <- result
+    aa<-tapply(result_cleaned[,2],result_cleaned$State,min, na.rm = TRUE)
+    aa
     
     ## Read outcome data
     ## Check that state and outcome are valid

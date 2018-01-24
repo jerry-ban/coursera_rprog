@@ -1,7 +1,16 @@
+
 library(dplyr)
-best <- function(state, outcome) {
+#source("rankhospital.R")
+rankhospital <- function(state, outcome, num = "best") {
+    ## Read outcome data
+    ## Check that state and outcome are valid
+    ## Return hospital name in that state with the given rank
+    ## 30-day death rate
+    #rankhospital("MD", "heart attack", "worst")
     #state<- "TX"
-    #outcome <- "heart. attack"
+    #outcome <- "heart failure"
+    #num <- 4
+    
     rdata<-read.csv("Assignment3-data/outcome-of-care-measures.csv", stringsAsFactors = FALSE)
     
     
@@ -46,9 +55,31 @@ best <- function(state, outcome) {
     
     result <- final_data[order(final_data[,2], final_data[,1]), ]
     #rdata[,"Hospital.Name"] <- as.character(rdata[,"Hospital.Name"])
-    head(result)
+    #head(result)
+    #tail(result)
     
-    result[1,1]    
+    result_cleaned <- result[complete.cases(result),]
+    #str(result_cleaned)
+    tail(result_cleaned)
+    true_length <-nrow(result_cleaned)
+    #rdata[,"Hospital.Name"] <- as.character(rdata[,"Hospital.Name"])
+    if(tolower(as.character(num))=="best")
+    {
+        result[1,1]    
+    }
+    else if (tolower(as.character(num))=="worst")
+    {
+        result[true_length,1]
+    }
+    else if(num <= true_length)
+    {
+        result[num,1]
+    }
+    else
+    {
+        myresult<-NA
+        myresult
+    }
     
     ## Read outcome data
     ## Check that state and outcome are valid

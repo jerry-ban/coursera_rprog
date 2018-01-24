@@ -1,3 +1,5 @@
+file_names <-list.files("Assignment3-data", full.names = TRUE)
+
 object.size(plants)
 names(plants)
 table(plants$Active_Growth_Period) # show how many time each value of a factor/categorical variable
