@@ -8,17 +8,11 @@ rankall <- function(outcome, num = "best") {
     ## 30-day death rate
     #rankhospital("MD", "heart attack", "worst")
     #state<- "TX"
-    #outcome <- "heart failure"
+    #outcome <- "heart attack"
     #num <- 4
     
     rdata<-read.csv("Assignment3-data/outcome-of-care-measures.csv", stringsAsFactors = FALSE)
-    
-    
-    all_states <- unique(rdata$State)
-    if(!is.element(state, all_states)){
-        stop("invalid state")
-    }
-    
+   
     outcome_new <- paste(strsplit(tolower(outcome),"[., ]")[[1]],collapse="")
     outcome_new <-paste(c("hospital30daydeathmortalityratesfrom", outcome_new), collapse = "")
     outcome_new
@@ -55,9 +49,27 @@ rankall <- function(outcome, num = "best") {
     summary(final_data)
     
     result <- final_data[order(final_data[,2], final_data[,1]), ]
+    #result_cleaned <- result[complete.cases(result),]
+    result_cleaned <- result
+    true_length <-nrow(result_cleaned)
+    if(tolower(as.character(num))=="best")
+    {
+        final_result<- result_cleaned[1,]    
+    }
+    else if (tolower(as.character(num))=="worst")
+    {
+        final_result<- result_cleaned[true_length,]
+    }
+    else
+    {
+        final_result<- result_cleaned[1:min(num,true_length),]
+    }
+    summary(final_result)
+    aa<-final_result[order("State","Hospital.Name")]
     #rdata[,"Hospital.Name"] <- as.character(rdata[,"Hospital.Name"])
     #head(result)
     #tail(result)
+    head(aa)
     
     #result_cleaned <- result[complete.cases(result),]
     result_cleaned <- result
