@@ -9,10 +9,13 @@ rankall <- function(outcome, num = "best") {
     #rankhospital("MD", "heart attack", "worst")
     #state<- "TX"
     #outcome <- "heart attack"
-    #num <- 4
+    #num <- 20
     
     rdata<-read.csv("Assignment3-data/outcome-of-care-measures.csv", stringsAsFactors = FALSE)
    
+    all_states <- unique(rdata$State)
+    all_states <- all_states[order(all_states)]
+    
     outcome_new <- paste(strsplit(tolower(outcome),"[., ]")[[1]],collapse="")
     outcome_new <-paste(c("hospital30daydeathmortalityratesfrom", outcome_new), collapse = "")
     outcome_new
@@ -48,32 +51,69 @@ rankall <- function(outcome, num = "best") {
     final_data <- sdata[,c(hospital_name_id,col_id,state_col_id)]
     summary(final_data)
     
-    result <- final_data[order(final_data[,2], final_data[,1]), ]
+    result <- final_data[order(final_data[,3], final_data[,2], final_data[,1]), ]
     #result_cleaned <- result[complete.cases(result),]
     result_cleaned <- result
-    true_length <-nrow(result_cleaned)
-    if(tolower(as.character(num))=="best")
-    {
-        final_result<- result_cleaned[1,]    
+    
+    result2 <- data.frame()
+    candidates<- split(result_cleaned[,c(3,1,2)], result_cleaned$State)
+    candidates
+    # convert list to dataframe
+    # df <- data.frame(matrix(unlist(l), nrow=132, byrow=T),stringsAsFactors=FALSE)
+    
+    getCompleteCases<- function(x, num){
+        class(x)
+        state_name<-x[1,1]
+        state_name
+        xd<-x
+        #xa <- xd[ xd[,3]== min(xd[,3],na.rm=TRUE),]
+        xa<-xd[order(xd[,3], xd[,2], xd[,1]), ]
+        xa
+        xb<-xa[complete.cases(xa),]
+        xb
+        if(nrow(xa) <1){
+            xa[1,] <- c(state_name,NA,NA)
+        }
+        colnames(xa)<-c("state", "hospital", "score")
+        true_length = nrow(xa)
+        if(tolower(as.character(num))=="best")
+        {
+            xb<-xa[1,]
+        }
+        else if(tolower(as.character(num))=="worst")
+        {
+            xb<-xa[true_length,]
+        }
+        else if(num<=true_length)
+        {
+            xb <- xa[num,]
+        }
+        else
+        {
+            xb<-data.frame("state"=c(state_name),"hospital" =c(NA), "score" = c(NA) )
+        }
+        row.names(xb) <- c(state_name)
+        xb
     }
-    else if (tolower(as.character(num))=="worst")
+    
+    
+    final_candidates<- lapply(candidates, function(x) {  getCompleteCases(x, num) } )
+    final_candidates
+    result <-data.frame()
+    for( x in final_candidates)
     {
-        final_result<- result_cleaned[true_length,]
+        result <- rbind(result, x[1,])
+        
     }
-    else
-    {
-        final_result<- result_cleaned[1:min(num,true_length),]
-    }
+    final_result <- result #lapply( final_candidates, function(x, result) rbind(result, x[[1]]))
+
     summary(final_result)
-    aa<-final_result[order("State","Hospital.Name")]
+    
+    aa<-final_result#[order(c("State","Hospital.Name"),]
+    
     #rdata[,"Hospital.Name"] <- as.character(rdata[,"Hospital.Name"])
     #head(result)
     #tail(result)
-    head(aa)
-    
-    #result_cleaned <- result[complete.cases(result),]
-    result_cleaned <- result
-    aa<-tapply(result_cleaned[,2],result_cleaned$State,min, na.rm = TRUE)
     aa
     
     ## Read outcome data

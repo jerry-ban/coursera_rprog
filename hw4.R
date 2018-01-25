@@ -1,5 +1,9 @@
 file_names <-list.files("Assignment3-data", full.names = TRUE)
 
+r <- rankall("pneumonia", "worst")
+subset(r, state == "NJ")
+as.character(subset(r, state == "NJ")$hospital)
+
 object.size(plants)
 names(plants)
 table(plants$Active_Growth_Period) # show how many time each value of a factor/categorical variable

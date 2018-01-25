@@ -1,6 +1,10 @@
 library(datasets)
 data(iris)
 
+dim(subset(rdata, State == "NJ" | State == "NY"))
+
+as.character(subset(r, state == "NJ")$hospital)
+
 apply(iris[,1:4], 2,  mean)
 
 data("mtcars")
